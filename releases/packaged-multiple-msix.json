@@ -1,10 +1,10 @@
 {
    "app-id": "9N6MK2GQBD58",
-  "version": "v_15_1",
+  "version": "v_17_1",
   "msix-filenames": [
-    "9N6MK2GQBD58_v15_1_x64.msixupload",
-    "9N6MK2GQBD58_v15_1_arm64.msixupload"
+    "9N6MK2GQBD58_v17_1_x64.msixupload",
+    "9N6MK2GQBD58_v17_1_arm64.msixupload"
   ],
-  "description": "v15_1 ARM64 package description",
-  "release-notes": "v15_1 is awesome! It has x64 and ARM64 support."
+  "description": "v17_1 ARM64 package description",
+  "release-notes": "v17_1 is awesome! It has x64 and ARM64 support."
 }
