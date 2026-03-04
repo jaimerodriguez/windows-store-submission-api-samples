@@ -1,0 +1,55 @@
+name: 'Packaged: MSIX Only'
+
+on:
+  push:
+    paths: ['releases/packaged-msix-only.json']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish MSIX Package
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read release config
+        run: |
+          $config = Get-Content "releases/packaged-msix-only.json" -Raw | ConvertFrom-Json
+          "APP_ID=$($config.'app-id')" >> $env:GITHUB_ENV
+          "VERSION=$($config.version)" >> $env:GITHUB_ENV
+          "MSIX_FILENAME=$($config.'msix-filename')" >> $env:GITHUB_ENV
+         
+
+      - name: Configure MSStore CLI
+        uses: ./.github/actions/configure-msstore
+        with:
+          tenant-id: ${{ secrets.TENANT_ID }}
+          seller-id: ${{ secrets.SELLER_ID }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
+
+      - name: Delete pending submission
+        uses: ./.github/actions/delete-pending-submission
+        with:
+          app-id: ${{ env.APP_ID }}
+
+      - name: Publish MSIX package
+        run: |
+          Write-Host "📦 Publishing ${{ env.MSIX_FILENAME }} for app ${{ env.APP_ID }}..."
+          msstore publish "releases/${{ env.MSIX_FILENAME }}" --appId "${{ env.APP_ID }}" 
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to publish package. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Publish command completed successfully."
+
+      - name: Poll submission status
+        uses: ./.github/actions/poll-packaged-status
+        with:
+          app-id: ${{ env.APP_ID }}
+          

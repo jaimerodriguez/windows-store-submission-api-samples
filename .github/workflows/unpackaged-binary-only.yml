@@ -1,0 +1,78 @@
+name: 'Unpackaged: Binary Only'
+
+on:
+  push:
+    paths: ['releases/unpackaged-binary-only.json']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Update Binary URL
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read release config
+        run: |
+          $config = Get-Content "releases/unpackaged-binary-only.json" -Raw | ConvertFrom-Json
+          "APP_ID=$($config.'app-id')" >> $env:GITHUB_ENV
+          "BINARY_URL=$($config.'binary-url')" >> $env:GITHUB_ENV
+
+      - name: Configure MSStore CLI
+        uses: ./.github/actions/configure-msstore-params
+        with:
+          tenant-id: ${{ secrets.TENANT_ID }}
+          seller-id: ${{ secrets.SELLER_ID }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
+
+      - name: Get current submission
+        run: |
+          Write-Host "📥 Fetching current submission for ${{ env.APP_ID }}..."
+          msstore submission get "${{ env.APP_ID }}" | Out-File -FilePath "submission_unpackaged_${{ env.APP_ID }}.json" -Encoding utf8
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to get submission. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Current submission retrieved."
+
+      - name: Update package URL
+        run: |
+          try {
+            $myJson = Get-Content "submission_unpackaged_${{ env.APP_ID }}.json" -Raw | ConvertFrom-Json -Depth 50
+            $myJson.Packages[0].PackageUrl = "${{ env.BINARY_URL }}"
+            $myJson.PSObject.Properties.Remove("PackageId")
+          }
+          catch {
+            Write-Host "❌ Failed to parse submission JSON: $($_.Exception.Message)"
+            exit 1
+          }
+
+          $updatedJson = $myJson | ConvertTo-Json -Depth 50
+          Write-Host "📤 Updating submission..."
+          msstore submission update "${{ env.APP_ID }}" $updatedJson  | Out-File -FilePath "submission_response_${{ env.APP_ID }}.json" -Encoding utf8 -NoNewline
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to update submission. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Submission updated."
+
+      - name: Publish submission
+        run: |
+          Write-Host "🚀 Publishing submission..."
+          msstore submission publish "${{ env.APP_ID }}" 
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to publish submission. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Submission published. Starting status polling..."
+
+      - name: Poll submission status
+        uses: ./.github/actions/poll-unpackaged-status
+        with:
+          app-id: ${{ env.APP_ID }}

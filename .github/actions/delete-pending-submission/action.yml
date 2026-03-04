@@ -1,0 +1,36 @@
+name: 'Delete Pending Submission'
+description: 'Delete any pending API-created submission for a packaged app'
+
+inputs:
+  app-id:
+    description: 'The Store App ID (e.g. 9NXXXXX)'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Delete pending submission
+      shell: pwsh
+      run: |
+        Write-Host "🗑️ Checking for pending submissions..."
+        $delete = " " | msstore submission delete "${{ inputs.app-id }}" --no-confirm 2>&1
+        if ($LASTEXITCODE -ne 0) {
+          if ($delete -match "No pending submission found") {
+            Write-Host "⚠️ No active submission found, continuing..."           
+          }
+          elseif ($delete -match "Press Enter to open the browser at this page") {
+            Write-Host "❌ Failed to delete submission."
+            Write-Host "The API/CLI can only delete submissions created via API."
+            Write-Host "If you have a pending submission created in Partner Center, please delete it or publish it there."
+            exit $LASTEXITCODE
+          }
+          else {
+            Write-Host "❌ Failed to delete submission."
+            Write-Host "Output: $delete"
+            exit $LASTEXITCODE
+          }
+        }
+        else {
+          Write-Host "✅ Pending submission deleted."
+        }
+         exit 0 

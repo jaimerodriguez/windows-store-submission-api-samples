@@ -1,0 +1,44 @@
+name: 'Configure MSStore CLI'
+description: 'Install and authenticate the Microsoft Store CLI'
+
+inputs:
+  tenant-id:
+    description: 'Azure AD Tenant ID'
+    required: true
+  seller-id:
+    description: 'Partner Center Seller ID'
+    required: true
+  client-id:
+    description: 'Azure AD App Client ID'
+    required: true
+  client-secret:
+    description: 'Azure AD App Client Secret'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install MSStore CLI
+      uses: microsoft/microsoft-store-apppublisher@v1.2
+
+    - name: Authenticate MSStore CLI
+      shell: pwsh
+    
+
+      run: |
+
+        if ([string]::IsNullOrEmpty("${{ inputs.tenant-id }}") -or 
+            [string]::IsNullOrEmpty("${{ inputs.seller-id }}") -or 
+            [string]::IsNullOrEmpty("${{ inputs.client-id }}") -or 
+            [string]::IsNullOrEmpty("${{ inputs.client-secret }}")) {
+          Write-Host "❌ One or more required inputs are missing or were empty" -ForegroundColor Red
+          exit -1
+        }
+        
+        Write-Host "🔐 Configuring MSStore CLI credentials..."
+        msstore reconfigure --tenantId "${{ inputs.tenant-id }}" --sellerId "${{ inputs.seller-id }}" --clientId "${{ inputs.client-id }}" --clientSecret "${{ inputs.client-secret }}" --verbose 
+        if ($LASTEXITCODE -ne 0) {
+          Write-Host "❌ Failed to configure MSStore CLI. Exiting..."
+          exit $LASTEXITCODE 
+        }
+        Write-Host "✅ MSStore CLI configured successfully."

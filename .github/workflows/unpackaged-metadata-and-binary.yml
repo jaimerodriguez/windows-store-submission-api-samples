@@ -1,0 +1,143 @@
+name: 'Unpackaged: Metadata + Binary'
+
+on:
+  push:
+    paths: ['releases/unpackaged-metadata-and-binary.json']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Update Binary + Metadata
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read release config
+        run: |
+          $config = Get-Content "releases/unpackaged-metadata-and-binary.json" -Raw | ConvertFrom-Json
+          "APP_ID=$($config.'app-id')" >> $env:GITHUB_ENV
+          "BINARY_URL=$($config.'binary-url')" >> $env:GITHUB_ENV
+          "DESCRIPTION_EN=$($config.'description-en')" >> $env:GITHUB_ENV
+          "WHATS_NEW_EN=$($config.'whats-new-en')" >> $env:GITHUB_ENV
+          "DESCRIPTION_ES=$($config.'description-es')" >> $env:GITHUB_ENV
+          "WHATS_NEW_ES=$($config.'whats-new-es')" >> $env:GITHUB_ENV
+
+      - name: Configure MSStore CLI
+        uses: ./.github/actions/configure-msstore-params 
+        with:
+          tenant-id: ${{ secrets.TENANT_ID }}
+          seller-id: ${{ secrets.SELLER_ID }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
+
+      - name: Get current submission
+        run: |
+          Write-Host "📥 Fetching current submission for ${{ env.APP_ID }}..."
+          msstore submission get "${{ env.APP_ID }}" | Out-File -FilePath "submission_unpackaged_${{ env.APP_ID }}.json" -Encoding utf8
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to get submission. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Current submission retrieved."
+
+      - name: Update package URLs and metadata 
+        run: |
+          try {
+            $myJson = Get-Content "submission_unpackaged_${{ env.APP_ID }}.json" -Raw | ConvertFrom-Json -Depth 50
+            $myJson.Packages[0].PackageUrl = "${{ env.BINARY_URL }}"
+            $myJson.PSObject.Properties.Remove("PackageId")
+          }
+          catch {
+            Write-Host "❌ Failed to parse submission JSON: $($_.Exception.Message)"
+            exit 1
+          }
+
+      
+          $updatedJson =  $myJson | ConvertTo-Json -Depth 50
+          Write-Host "📤 Updating submission..."
+          msstore submission update "${{ env.APP_ID }}" $updatedJson  | Out-File -FilePath "submission_response_${{ env.APP_ID }}.json" -Encoding utf8 -NoNewline
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to update submission. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Submission updated."
+
+     
+          $version = "$(Get-Date -Format 'yyyy-MM-dd HH:mm')"
+
+          $descriptionEn = "${{ env.DESCRIPTION_EN }}"
+          if ([string]::IsNullOrEmpty($descriptionEn)) {
+            $descriptionEn = "Description updated $version"
+          }
+          $whatsNewEn = "${{ env.WHATS_NEW_EN }}"
+          if ([string]::IsNullOrEmpty($whatsNewEn)) {
+            $whatsNewEn = "What's new for $version"
+          }
+
+          $metadata = @{
+            listings = @{
+              language                = "en"
+              description             = $descriptionEn
+              whatsNew                = $whatsNewEn
+              shortDescription        = "Updated $version"
+              additionalLicenseTerms  = "License terms are required."
+            }
+          } | ConvertTo-Json -Depth 50
+
+          $metadataContent = $metadata  | ConvertFrom-Json -Depth 50 | ConvertTo-Json -Depth 50  
+           
+          Write-Host "📝 Updating English metadata..."
+          msstore submission updateMetadata "${{ env.APP_ID }}" $metadataContent 
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to update English metadata. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ English metadata updated."
+
+
+
+          $descriptionEs = "${{ env.DESCRIPTION_ES }}"
+          $whatsNewEs = "${{ env.WHATS_NEW_ES }}"
+          if ([string]::IsNullOrEmpty($whatsNewEs)) {
+            $whatsNewEs = "Novedades para $version"
+          }
+
+          $metadata = @{
+            listings = @{
+              language                = "es"
+              description             = $descriptionEs
+              whatsNew                = $whatsNewEs
+              shortDescription        = "Actualizado $version"
+              additionalLicenseTerms  = "Terminos de licencia"
+            }
+          } | ConvertTo-Json -Depth 50
+
+          $metadataContent = $metadata  | ConvertFrom-Json -Depth 50 | ConvertTo-Json -Depth 50  
+           
+          Write-Host "📝 Updating Spanish metadata..."
+          msstore submission updateMetadata "${{ env.APP_ID }}" $metadataContent 
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to update Spanish metadata. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Spanish metadata updated."
+
+      - name: Publish submission
+        run: |
+          Write-Host "🚀 Publishing submission..."
+          msstore submission publish "${{ env.APP_ID }}" 
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to publish submission. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Submission published. Starting status polling..."
+
+      - name: Poll submission status
+        uses: ./.github/actions/poll-unpackaged-status
+        with:
+          app-id: ${{ env.APP_ID }}
