@@ -1,0 +1,84 @@
+name: 'Poll Packaged Submission Status'
+description: 'Poll submission status for packaged apps using string matching (Published/Failed/Rejected)'
+
+inputs:
+  app-id:
+    description: 'The Store App ID (e.g. 9NXXXXX)'
+    required: true
+  max-polls:
+    description: 'Maximum number of polling attempts'
+    required: false
+    default: '50'
+  sleep-seconds:
+    description: 'Seconds to wait between polls'
+    required: false
+    default: '180'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Poll submission status
+      shell: pwsh
+      run: |
+        $AppId = "${{ inputs.app-id }}"
+        $MaxPolls = [int]"${{ inputs.max-polls }}"
+        $SleepSeconds = [int]"${{ inputs.sleep-seconds }}"
+        $ErrorLimit = 5
+
+        $pollCount = 0
+        $priorStatus = ""
+        $currentStatus = ""
+        $errorCount = 0
+
+        Write-Host "⏳ Starting status polling (max $MaxPolls polls, ${SleepSeconds}s interval)..."
+
+        while ($true) {
+          $pollCount++
+          Write-Host "📊 Poll #$pollCount at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+
+          if ($pollCount -ge $MaxPolls) {
+            Write-Host "⚠️ Reached maximum poll count ($MaxPolls). Exiting..."
+            exit 1
+          }
+
+          try {
+            $status = msstore submission status $AppId 2>&1 | Out-String
+            $currentStatus = $status.ToString().Trim()
+
+            if ($currentStatus -ne $priorStatus) {
+              $priorStatus = $currentStatus
+              Write-Host "🔄 Status changed to: '$currentStatus'"
+            }
+
+            if ($currentStatus.Contains("Published")) {
+              Write-Host "✅ Submission published successfully!"
+              break
+            }
+            if ( $currentStatus.Contains( "Canceled") ) {
+              Write-Host "Submission was canceled. Exiting polling loop." -ForegroundColor Yellow
+              break
+          }
+            if ($currentStatus.Contains("Failed") -or $currentStatus.Contains("Rejected")) {
+              Write-Host "❌ Submission failed or was rejected."
+              exit 1001
+            }
+            if ($currentStatus.Contains("Error")) {
+              Write-Host "⚠️ Status contains error: $currentStatus"
+              $errorCount++
+              if ($errorCount -ge $ErrorLimit) {
+                Write-Host "❌ Exceeded maximum error count ($ErrorLimit). Exiting..."
+                exit 1
+              }
+            }
+          }
+          catch {
+            Write-Host "❌ Error polling status: $($_.Exception.Message)"
+            $errorCount++
+            if ($errorCount -ge $ErrorLimit) {
+              Write-Host "❌ Exceeded maximum error count ($ErrorLimit). Exiting..."
+              exit 1003
+            }
+          }
+          Start-Sleep -Seconds $SleepSeconds
+        }
+        exit 0 

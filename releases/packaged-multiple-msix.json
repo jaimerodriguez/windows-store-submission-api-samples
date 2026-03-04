@@ -1,0 +1,10 @@
+{
+   "app-id": "TODO_AddYourPackagedApplicationIdHere",
+  "version": "v_15_1",
+  "msix-filenames": [
+    "TODO_AddYourPackagedApplicationIdHere_v15_1_x64.msixupload",
+    "TODO_AddYourPackagedApplicationIdHere_v15_1_arm64.msixupload"
+  ],
+  "description": "v15_1 ARM64 package description",
+  "release-notes": "v15_1 is awesome! It has x64 and ARM64 support."
+}

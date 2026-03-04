@@ -1,0 +1,35 @@
+name: 'Configure MSStore CLI'
+description: 'Install and authenticate the Microsoft Store CLI'
+
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install MSStore CLI
+      uses: microsoft/microsoft-store-apppublisher@v1.2
+
+    - name: Authenticate MSStore CLI
+      shell: pwsh
+      env: 
+        TENANT_ID: ${{ secrets.TENANT_ID }}
+        SELLER_ID: ${{ secrets.SELLER_ID }}
+        CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+
+      run: |
+
+        if ([string]::IsNullOrEmpty("$env:TENANT_ID") -or 
+            [string]::IsNullOrEmpty("$env:SELLER_ID") -or 
+            [string]::IsNullOrEmpty("$env:CLIENT_ID") -or 
+            [string]::IsNullOrEmpty("$env:CLIENT_SECRET")) {
+          Write-Host "❌ One or more required inputs are missing. Please check the repository configuration. These should be secrets" -ForegroundColor Red
+          exit -1
+        }
+        
+        Write-Host "🔐 Configuring MSStore CLI credentials..."
+        msstore reconfigure --tenantId "$env:TENANT_ID" --sellerId "$env:SELLER_ID" --clientId "$env:CLIENT_ID" --clientSecret "$env:CLIENT_SECRET" --verbose 
+        if ($LASTEXITCODE -ne 0) {
+          Write-Host "❌ Failed to configure MSStore CLI. Exiting..."
+          exit $LASTEXITCODE 
+        }
+        Write-Host "✅ MSStore CLI configured successfully."

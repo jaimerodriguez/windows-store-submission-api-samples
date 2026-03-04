@@ -1,0 +1,143 @@
+name: 'Packaged: MSIX + Metadata'
+
+on:
+  push:
+    paths: ['releases/packaged-msix-and-metadata.json']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish MSIX + Metadata
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read release config
+        run: |
+          $config = Get-Content "releases/packaged-msix-and-metadata.json" -Raw | ConvertFrom-Json
+          "APP_ID=$($config.'app-id')" >> $env:GITHUB_ENV
+          "VERSION=$($config.version)" >> $env:GITHUB_ENV
+          "MSIX_FILENAME=$($config.'msix-filename')" >> $env:GITHUB_ENV
+          "DESCRIPTION=$($config.description)" >> $env:GITHUB_ENV
+          "RELEASE_NOTES=$($config.'release-notes')" >> $env:GITHUB_ENV
+
+      - name: Configure MSStore CLI
+        uses: ./.github/actions/configure-msstore-params 
+        with:
+          tenant-id: ${{ secrets.TENANT_ID }}
+          seller-id: ${{ secrets.SELLER_ID }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
+
+      - name: Delete pending submission
+        uses: ./.github/actions/delete-pending-submission
+        with:
+          app-id: ${{ env.APP_ID }}
+
+      - name: Get current submission
+        run: |
+          Write-Host "📥 Fetching current submission for ${{ env.APP_ID }}..."
+          msstore submission get "${{ env.APP_ID }}" | Out-File -FilePath "submission_${{ env.APP_ID }}.json" -Encoding utf8 -NoNewline
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to get submission. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Current submission retrieved."
+
+      - name: Prepare Submission and Upload Metadata and Package 
+        run: |
+          $version = "${{ env.VERSION }}"
+          $date = Get-Date -Format "yyyy-MM-dd HH:mm"
+          $updatePostfix = "$version $date"
+
+          $myJson = Get-Content "submission_${{ env.APP_ID }}.json" -Raw | ConvertFrom-Json -Depth 50
+
+          # Remove fields that must be regenerated
+          $myJson.PSObject.Properties.Remove("Id")
+          $myJson.PSObject.Properties.Remove("FileUploadUrl")
+
+          # Update metadata
+          $description = "${{ env.DESCRIPTION }}"
+          if ([string]::IsNullOrEmpty($description)) {
+            $description = "Description updated for $updatePostfix"
+          }
+          $releaseNotes = "${{ env.RELEASE_NOTES }}"
+          if ([string]::IsNullOrEmpty($releaseNotes)) {
+            $releaseNotes = "Release Notes updated for $updatePostfix"
+          }
+
+          $myJson.Listings.'en-us'.BaseListing.Description = $description
+          $myJson.Listings.'en-us'.BaseListing.ReleaseNotes = $releaseNotes
+
+          # Add new package entry
+          $myJson.ApplicationPackages += [PSCustomObject]@{
+            FileName              = "${{ env.MSIX_FILENAME }}"
+            FileStatus            = "PendingUpload"
+            MinimumDirectXVersion = "None"
+            MinimumSystemRam      = "None"
+          }
+
+          try { 
+            $updatedJson = $myJson | ConvertTo-Json -Depth 50 -ErrorAction Stop           
+            Write-Host "✅ Updated JSON is $updatedJson."
+          } catch {
+            Write-Host "❌ Failed to convert updated JSON. Exiting..."
+            Write-Host "Error: $($_.Exception.Message)"
+            exit 10002
+          } 
+          Write-Host "📤 Updating submission..."
+          $updatedSubmissionRaw = msstore submission update "${{ env.APP_ID }}" $updatedJson | Out-String -NoNewline
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to update submission. Exiting..."
+            Write-Host "Updated Json was $updatedJson"
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Submission updated."
+      
+          $response =  $updatedSubmissionRaw | ConvertFrom-Json -Depth 50
+          $FileUploadUrl = $response.FileUploadUrl
+
+          if ([string]::IsNullOrEmpty($FileUploadUrl)) {
+            Write-Host "❌ FileUploadUrl is null or empty. Exiting..."
+            exit 10001
+          }
+          Write-Host "📤 Uploading to SAS URL..."
+
+          Compress-Archive -Path "releases/${{ env.MSIX_FILENAME }}" -DestinationPath "packages_${{ env.APP_ID }}.zip" -Force
+
+          $headers = @{ "x-ms-blob-type" = "BlockBlob" }
+          $StatusCode = 0
+          try {
+            $uploadResponse = Invoke-WebRequest -Uri $FileUploadUrl -Method Put -Headers $headers -InFile "packages_${{ env.APP_ID }}.zip" -ContentType "application/octet-stream"
+            $StatusCode = $uploadResponse.StatusCode
+            Write-Host "✅ Package uploaded successfully. Status: $StatusCode"
+          }
+          catch {
+            $StatusCode = $_.Exception.Response.StatusCode.value__
+            Write-Host "❌ Upload exception: $($_.Exception.Message)"
+          }
+
+          if ($StatusCode -ne 200 -and $StatusCode -ne 201) {
+            Write-Host "❌ Upload failed with status $StatusCode. Exiting..."
+            exit 10000 + $StatusCode
+          }
+
+      - name: Publish submission
+        run: |
+          Write-Host "🚀 Publishing submission..."
+          msstore submission publish "${{ env.APP_ID }}" 
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ Failed to publish submission. Exiting..."
+            exit $LASTEXITCODE
+          }
+          Write-Host "✅ Submission published. Starting status polling..."
+
+      - name: Poll submission status
+        uses: ./.github/actions/poll-packaged-status
+        with:
+          app-id: ${{ env.APP_ID }}

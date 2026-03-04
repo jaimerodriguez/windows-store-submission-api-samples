@@ -1,0 +1,7 @@
+{
+  "app-id": "TODO_AddYourPackagedApplicationIdHere",
+  "version": "v_15_1",
+  "msix-filename": "TODO_AddYourPackagedApplicationIdHere_v15_1_x64.msixupload", 
+  "description": " Description for v15",
+  "release-notes": "Release notes for v15"
+}

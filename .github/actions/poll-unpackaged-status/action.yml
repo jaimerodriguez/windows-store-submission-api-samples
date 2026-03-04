@@ -1,0 +1,78 @@
+name: 'Poll Unpackaged Submission Status'
+description: 'Poll submission status for unpackaged apps using JSON parsing (IsReady/OngoingSubmissionId)'
+
+inputs:
+  app-id:
+    description: 'The Partner Center App GUID'
+    required: true
+  max-polls:
+    description: 'Maximum number of polling attempts'
+    required: false
+    default: '50'
+  sleep-seconds:
+    description: 'Seconds to wait between polls'
+    required: false
+    default: '180'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Poll submission status
+      shell: pwsh
+      run: |
+        $AppId = "${{ inputs.app-id }}"
+        $MaxPolls = [int]"${{ inputs.max-polls }}"
+        $SleepSeconds = [int]"${{ inputs.sleep-seconds }}"
+        $ErrorLimit = 5
+
+        $pollCount = 0
+        $priorStatus = ""
+        $errorCount = 0
+        $successCount = 0   
+
+        Write-Host "⏳ Starting status polling (max $MaxPolls polls, ${SleepSeconds}s interval)..."
+
+        while ($true) {
+          $pollCount++
+          Write-Host "📊 Poll #$pollCount at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+
+          if ($pollCount -ge $MaxPolls) {
+            Write-Host "⚠️ Reached maximum poll count ($MaxPolls). Exiting..."
+            exit 1
+          }
+
+          try {
+            $currentStatus = msstore submission status $AppId | ConvertFrom-Json -Depth 50
+            if ($currentStatus.ResponseData.IsReady -and $null -eq $currentStatus.ResponseData.OngoingSubmissionId) {
+              $successCount++ 
+              if ( $successCount -ge 2) {
+                Write-Host "Submission is ready. Exiting polling loop." -ForegroundColor Green
+                break
+              }   
+            } 
+
+            if ($null -ne $currentStatus.ResponseData.OngoingSubmissionId -and $priorStatus -ne $currentStatus.ResponseData.OngoingSubmissionId) {
+              Write-Host "🔄 OngoingSubmissionId: '$($currentStatus.ResponseData.OngoingSubmissionId)'"
+              $priorStatus = $currentStatus.ResponseData.OngoingSubmissionId
+            }
+
+            if (-not $currentStatus.IsSuccess) {
+              Write-Host "⚠️ Submission status indicates failure:"
+              Write-Host ($currentStatus | ConvertTo-Json -Depth 50)
+              $errorCount++
+              if ($errorCount -ge $ErrorLimit) {
+                Write-Host "❌ Exceeded maximum error count ($ErrorLimit). Exiting..."
+                exit 1
+              }
+            }
+          }
+          catch {
+            Write-Host "❌ Error polling status: $($_.Exception.Message)"
+            $errorCount++
+            if ($errorCount -ge $ErrorLimit) {
+              Write-Host "❌ Exceeded maximum error count ($ErrorLimit). Exiting..."
+              exit 1
+            }
+          }
+          Start-Sleep -Seconds $SleepSeconds
+        }
