@@ -83,8 +83,7 @@ jobs:
           }
 
           try { 
-            $updatedJson = $myJson | ConvertTo-Json -Depth 50 -ErrorAction Stop           
-            Write-Host "✅ Updated JSON is $updatedJson."
+            $updatedJson = $myJson | ConvertTo-Json -Depth 50 -ErrorAction Stop                        
           } catch {
             Write-Host "❌ Failed to convert updated JSON. Exiting..."
             Write-Host "Error: $($_.Exception.Message)"
