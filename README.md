@@ -325,7 +325,7 @@ Compress-Archive -Path "$($AppId)_v2_2_arm64_bundle.msixupload", "$($AppId)_$($v
 | Resource | Description |
 | :--- | :--- |
 | [CLI to REST API Mapping](./docs/CLI_API_MAPPING.md) | Schema mapping between CLI commands and REST API, including most enum values. |
-| [MS Store CLI Reference](./docs/MSSTORE_CLI.md) | Complete reference for the Microsoft Store Developer CLI |
+| [MS Store CLI Reference](./docs/MS_STORE_CLI.md) | Complete reference for the Microsoft Store Developer CLI |
 | [Submission API Reference](./docs/MS_STORE_SUBMISSION_API.md) | Condensed reference for the Store Submission API |
 | [REST API Node.js Samples](./submisions_api_rest/) | Working Node.js scripts that call the Store REST API directly ([README](./submisions_api_rest/README.md)) |
 

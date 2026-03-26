@@ -17,7 +17,7 @@ async function RunPackagedSubmission() {
     print('Getting App Info');
     var appInfo = await client.callDevCenterAPI(client.appUrl, 'get');
     print(appInfo);
-
+  
     // Step 3: Delete Pending Submission (if exists)
     if (appInfo.pendingApplicationSubmission) {
         var pendingSubId = appInfo.pendingApplicationSubmission.id;

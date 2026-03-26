@@ -28,6 +28,14 @@ class PackagedSubmissionClient {
             body: params
         });
         var data = await response.json();
+        if ( data.error || !data.access_token) {
+            let message = `Error acquiring access token: ${data.error}`;
+            if (data.error_description) {
+                message += ` - ${data.error_description}`;
+            }
+            console.error(message); 
+            throw new Error(`Failed to acquire access token: ${message}`);
+        }
         this.accessToken = data.access_token;
     }
 

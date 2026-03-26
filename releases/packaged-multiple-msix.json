@@ -5,6 +5,6 @@
     "TODO_AddYourPackagedApplicationIdHere_v17_1_x64.msixupload",
     "TODO_AddYourPackagedApplicationIdHere_v17_1_arm64.msixupload"
   ],
-  "description": "v17_1 ARM64 package description",
+  "description": "v17_1 has ARM64 and x64 package",
   "release-notes": "v17_1 is awesome! It has x64 and ARM64 support."
 }
