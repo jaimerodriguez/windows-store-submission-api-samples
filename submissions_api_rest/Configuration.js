@@ -3,16 +3,15 @@ var config = {
     version : "1",
     serviceEndpoint : "https://api.store.microsoft.com",    
     scope : "https://api.store.microsoft.com/.default",
-    sellerId : "TODO_AddYourSellerIdHere",
     jsonContentType : "application/json",
     pngContentType : "image/png",
     binaryStreamContentType : "application/octet-stream",
     devCenterEndpoint : "https://manage.devcenter.microsoft.com/v1.0/my",
     devCenterResource : "https://manage.devcenter.microsoft.com",
     packageFilePath : "./Package.zip", 
-    printRequests : true 
-
-
+    printRequests : true, 
+    
+    sellerId : "TODO_AddYourSellerIdHere",
     unpackagedApplicationId : "TODO_AddYourUnpackagedApplicationIdHere", 
     packagedApplicationId : "TODO_AddYourPackagedApplicationIdHere",    
     clientId : "TODO_AddYourClientIdHere",

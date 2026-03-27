@@ -67,7 +67,7 @@ runs:
               $errorCount++
               if ($errorCount -ge $ErrorLimit) {
                 Write-Host "❌ Exceeded maximum error count ($ErrorLimit). Exiting..."
-                exit 1
+                exit 1002
               }
             }
           }

@@ -2,7 +2,7 @@ Set-PSDebug -Trace 1 -Strict
 
 # Scenario 2: Update an existing packaged app with new metadata and package using MSStore CLI
 
-$AppId = 'TODO_AddYourUnpackagedApplicationIdHere'
+$AppId = 'e9eee9fc-b68b-400f-9a47-7447d444aa85'
 $UpdateUrl = "https://msstorefasteast.blob.core.windows.net/msstoreclitest/$($version)/MSCLIPipelineSetup.exe" 
 $version = "v6_0"
 

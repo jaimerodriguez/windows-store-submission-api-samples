@@ -43,7 +43,7 @@ Returned by `msstore apps get <productId>`
 
 ```json
 {
-  "Id": "TODO_AddYourPackagedApplicationIdHere",
+  "Id": "9N6MK2GQBD58",
   "PrimaryName": "MSStore Dev CLI Test",
   "PackageFamilyName": "JaimeRodriguezLLC.pipelinemsixtest_9393n9ncvh2my",
   "PackageIdentityName": "JaimeRodriguezLLC.pipelinemsixtest",
@@ -51,12 +51,12 @@ Returned by `msstore apps get <productId>`
   "FirstPublishedDate": "2025-09-23T17:11:10Z",
   "PendingApplicationSubmission": {
     "Id": "1152921505700612698",
-    "ResourceLocation": "applications/TODO_AddYourPackagedApplicationIdHere/submissions/1152921505700612698"
+    "ResourceLocation": "applications/9N6MK2GQBD58/submissions/1152921505700612698"
   },
   "HasAdvancedListingPermission": true,
   "LastPublishedApplicationSubmission": {
     "Id": "1152921505700612396",
-    "ResourceLocation": "applications/TODO_AddYourPackagedApplicationIdHere/submissions/1152921505700612396"
+    "ResourceLocation": "applications/9N6MK2GQBD58/submissions/1152921505700612396"
   }
 }
 ```
@@ -277,7 +277,7 @@ The CLI parses the HTTP error codes and converts them to strings.
 ```text
 "No pending submission found"
 
-Here is the output of "msstore submission delete TODO_AddYourPackagedApplicationIdHere --no-confirm".
+Here is the output of "msstore submission delete 9N6MK2GQBD58 --no-confirm".
 Notice that the CLI still confirms. Our scripts work around this in PowerShell.
 ✅ Found Pending Submission.
 Found Pending Submission with Id '1152921505700621357'
@@ -285,7 +285,7 @@ Ingestion API can only update, delete, and commit submissions that are created t
 one using the APIng Submission
 
 ⣾ Deleting existing Submission
-Press Enter to open the browser at this page: https://partner.microsoft.com/dashboard/products/TODO_AddYourPackagedApplicationIdHere/submissions/11529
+Press Enter to open the browser at this page: https://partner.microsoft.com/dashboard/products/9N6MK2GQBD58/submissions/11529
 ⣷ Deleting existing Submission"
 ```
 
@@ -295,7 +295,7 @@ Press Enter to open the browser at this page: https://partner.microsoft.com/dash
 
 ## Unpackaged Apps
 
-Response from *msstore submission get TODO_AddYourUnpackagedApplicationIdHere*
+Response from *msstore submission get e9eee9fc-b68b-400f-9a47-7447d444aa85*
 
 ###### Unpackaged Submission
 
@@ -359,7 +359,7 @@ Response from *msstore submission get TODO_AddYourUnpackagedApplicationIdHere*
 ```
 
 
-Response from *msstore submission getListingAssets TODO_AddYourUnpackagedApplicationIdHere*
+Response from *msstore submission getListingAssets e9eee9fc-b68b-400f-9a47-7447d444aa85*
 
 ```json
 {
@@ -424,7 +424,7 @@ The rest of the unpackaged app metadata is below.
 
 ###### Unpackaged Status
 
-Response from *msstore submission status TODO_AddYourUnpackagedApplicationIdHere* when there is a submission under review
+Response from *msstore submission status e9eee9fc-b68b-400f-9a47-7447d444aa85* when there is a submission under review
 
 ```json
 {
@@ -444,7 +444,7 @@ SubmissionId: 1152921505700517065",
 }
 ```
 
-Response from *msstore submission status TODO_AddYourUnpackagedApplicationIdHere* when there is no submission
+Response from *msstore submission status e9eee9fc-b68b-400f-9a47-7447d444aa85* when there is no submission
 
 ```json
 {

@@ -2,8 +2,8 @@ Set-PSDebug -Trace 1 -Strict
 
 # Scenario 2: Update an existing packaged app with new metadata and package using MSStore CLI
 
-$AppId = 'TODO_AddYourPackagedApplicationIdHere'
-$version = "v16_0"
+$AppId = '9N6MK2GQBD58'
+$version = "v17_1"
 $date = Get-Date -Format "yyyy-MM-dd HH:mm"
 $updatePostfix = $version + " " + $date
 

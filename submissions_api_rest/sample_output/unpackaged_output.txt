@@ -2,17 +2,17 @@ Getting Access Token
 
 
 Getting Current Application Draft Status
---- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/status ---
+--- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/status ---
 {"responseData":{"isReady":true},"isSuccess":true}
 
 
 Getting Application Packages
---- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/packages ---
+--- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/packages ---
 {"responseData":{"packages":[{"packageUrl":"https://msstorefasteast.blob.core.windows.net/msstoreclitest/v2_0/MSCLIPipelineSetup.exe","languages":["en"],"architectures":["X64"],"installerParameters":"/s /r /t new-args","isSilentInstall":false,"errorDetails":[{"errorScenarioDetails":[],"errorScenario":"installationCancelledByUser"},{"errorScenarioDetails":[],"errorScenario":"applicationAlreadyExists"},{"errorScenarioDetails":[],"errorScenario":"installationAlreadyInProgress"},{"errorScenarioDetails":[],"errorScenario":"diskSpaceIsFull"},{"errorScenarioDetails":[],"errorScenario":"rebootRequired"},{"errorScenarioDetails":[],"errorScenario":"networkFailure"},{"errorScenarioDetails":[],"errorScenario":"packageRejectedDuringInstallation"},{"errorScenarioDetails":[],"errorScenario":"installationSuccessful"},{"errorScenarioDetails":[],"errorScenario":"miscellaneous"}],"packageType":"exe","packageId":"72541436"}]},"isSuccess":true}
 
 
 Getting Single Package
---- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/packages/72541436 ---
+--- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/packages/72541436 ---
 {"responseData":{"packages":[{"packageUrl":"https://msstorefasteast.blob.core.windows.net/msstoreclitest/v2_0/MSCLIPipelineSetup.exe","languages":["en"],"architectures":["X64"],"installerParameters":"/s /r /t new-args","isSilentInstall":false,"errorDetails":[{"errorScenarioDetails":[],"errorScenario":"installationCancelledByUser"},{"errorScenarioDetails":[],"errorScenario":"applicationAlreadyExists"},{"errorScenarioDetails":[],"errorScenario":"installationAlreadyInProgress"},{"errorScenarioDetails":[],"errorScenario":"diskSpaceIsFull"},{"errorScenarioDetails":[],"errorScenario":"rebootRequired"},{"errorScenarioDetails":[],"errorScenario":"networkFailure"},{"errorScenarioDetails":[],"errorScenario":"packageRejectedDuringInstallation"},{"errorScenarioDetails":[],"errorScenario":"installationSuccessful"},{"errorScenarioDetails":[],"errorScenario":"miscellaneous"}],"packageType":"exe","packageId":"72541436"}]},"isSuccess":true}
 
 
@@ -20,20 +20,20 @@ Updating Entire Package Set
 {"packages":[{"packageUrl":"https://msstorefasteast.blob.core.windows.net/msstoreclitest/v2_0/MSCLIPipelineSetup.exe","languages":["en"],"architectures":["X64"],"installerParameters":"/s /r new-args","isSilentInstall":false,"errorDetails":[{"errorScenarioDetails":[],"errorScenario":"installationCancelledByUser"},{"errorScenarioDetails":[],"errorScenario":"applicationAlreadyExists"},{"errorScenarioDetails":[],"errorScenario":"installationAlreadyInProgress"},{"errorScenarioDetails":[],"errorScenario":"diskSpaceIsFull"},{"errorScenarioDetails":[],"errorScenario":"rebootRequired"},{"errorScenarioDetails":[],"errorScenario":"networkFailure"},{"errorScenarioDetails":[],"errorScenario":"packageRejectedDuringInstallation"},{"errorScenarioDetails":[],"errorScenario":"installationSuccessful"},{"errorScenarioDetails":[],"errorScenario":"miscellaneous"}],"packageType":"exe","packageId":"72541436"}]}
 
 
---- put: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/packages ---
+--- put: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/packages ---
 {"packages":[{"packageUrl":"https://msstorefasteast.blob.core.windows.net/msstoreclitest/v2_0/MSCLIPipelineSetup.exe","languages":["en"],"architectures":["X64"],"installerParameters":"/s /r new-args","isSilentInstall":false,"errorDetails":[{"errorScenarioDetails":[],"errorScenario":"installationCancelledByUser"},{"errorScenarioDetails":[],"errorScenario":"applicationAlreadyExists"},{"errorScenarioDetails":[],"errorScenario":"installationAlreadyInProgress"},{"errorScenarioDetails":[],"errorScenario":"diskSpaceIsFull"},{"errorScenarioDetails":[],"errorScenario":"rebootRequired"},{"errorScenarioDetails":[],"errorScenario":"networkFailure"},{"errorScenarioDetails":[],"errorScenario":"packageRejectedDuringInstallation"},{"errorScenarioDetails":[],"errorScenario":"installationSuccessful"},{"errorScenarioDetails":[],"errorScenario":"miscellaneous"}],"packageType":"exe","packageId":"72541436"}]}
 {"responseData":{},"isSuccess":true}
 
 
 Updating Single Package's Download Url
---- patch: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/packages/72541436 ---
+--- patch: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/packages/72541436 ---
 {"packageUrl":"https://msstorefasteast.blob.core.windows.net/msstoreclitest/v2_0/MSCLIPipelineSetup.exe","languages":["en"],"architectures":["X64"],"installerParameters":"/s /r /t new-args","isSilentInstall":false,"errorDetails":[{"errorScenarioDetails":[],"errorScenario":"installationCancelledByUser"},{"errorScenarioDetails":[],"errorScenario":"applicationAlreadyExists"},{"errorScenarioDetails":[],"errorScenario":"installationAlreadyInProgress"},{"errorScenarioDetails":[],"errorScenario":"diskSpaceIsFull"},{"errorScenarioDetails":[],"errorScenario":"rebootRequired"},{"errorScenarioDetails":[],"errorScenario":"networkFailure"},{"errorScenarioDetails":[],"errorScenario":"packageRejectedDuringInstallation"},{"errorScenarioDetails":[],"errorScenario":"installationSuccessful"},{"errorScenarioDetails":[],"errorScenario":"miscellaneous"}],"packageType":"exe","packageId":"72541436"}
 {"responseData":{},"isSuccess":true}
 
 
 Committing Packages
---- post: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/packages/commit ---
-{"responseData":{"pollingUrl":"submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/status"},"isSuccess":true}
+--- post: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/packages/commit ---
+{"responseData":{"pollingUrl":"submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/status"},"isSuccess":true}
 
 
 Waiting for Upload to finish
@@ -41,28 +41,28 @@ Waiting for Upload to finish
 
 
 Getting Application Metadata - All Modules
---- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/metadata ---
-{"responseData":{"listings":[{"language":"en","description":"New Description Updated By Node.js Sample Code","whatsNew":"new stuff for v2_0 2026-02-07 22:00","productFeatures":["v2_0 2026-02-07 22:00 rocks","v2_0 2026-02-07 22:00 is funny too"],"shortDescription":"test metadata 4","searchTerms":[],"additionalLicenseTerms":"License terms are required.","requirements":[],"heroArts":[],"trailers":[]},{"language":"es","description":"New Description Updated By Node.js Sample Code","whatsNew":"Nada nuevo en v2_0 2026-02-07 22:00","productFeatures":["Diversion","inteligencia artificial"],"shortDescription":"descripcion corta","searchTerms":[],"additionalLicenseTerms":"Terminos de licencia","requirements":[],"heroArts":[],"trailers":[]}],"availability":{"markets":["US"],"discoverability":"DEEPLINK_ONLY","enableInFutureMarkets":false,"pricing":"FREE","freeTrial":"NO_FREE_TRIAL"},"properties":{"isPrivacyPolicyRequired":true,"privacyPolicyUrl":"https://cdn.storeedgefd.dsx.mp.microsoft.com/eus2/privacy-policy-storage/TODO_AddYourSellerIdHere/TODO_AddYourUnpackagedApplicationIdHere/draftsubmission/privacy_policy_69543acd-782e-41e3-a2f9-04fb15bda2af.txt","certificationNotes":"Updated certification notes. ","category":"DeveloperTools","subcategory":"Utilities","genres":[],"productDeclarations":{"dependsOnDriversOrNT":false,"accessibilitySupport":false,"penAndInkSupport":false,"usesGenerativeAI":false},"isSystemFeatureRequired":[{"isRequired":false,"isRecommended":false,"hardwareItemType":"Touch"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Keyboard"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Mouse"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Camera"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"NFC_HCE"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"NFC_Proximity"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Bluetooth_LE"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Telephony"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Microphone"}],"systemRequirementDetails":[{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"Memory"},{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"DirectX"},{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"Video_Memory"},{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"Processor"},{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"Graphics"}]}},"isSuccess":true}
+--- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/metadata ---
+{"responseData":{"listings":[{"language":"en","description":"New Description Updated By Node.js Sample Code","whatsNew":"new stuff for v2_0 2026-02-07 22:00","productFeatures":["v2_0 2026-02-07 22:00 rocks","v2_0 2026-02-07 22:00 is funny too"],"shortDescription":"test metadata 4","searchTerms":[],"additionalLicenseTerms":"License terms are required.","requirements":[],"heroArts":[],"trailers":[]},{"language":"es","description":"New Description Updated By Node.js Sample Code","whatsNew":"Nada nuevo en v2_0 2026-02-07 22:00","productFeatures":["Diversion","inteligencia artificial"],"shortDescription":"descripcion corta","searchTerms":[],"additionalLicenseTerms":"Terminos de licencia","requirements":[],"heroArts":[],"trailers":[]}],"availability":{"markets":["US"],"discoverability":"DEEPLINK_ONLY","enableInFutureMarkets":false,"pricing":"FREE","freeTrial":"NO_FREE_TRIAL"},"properties":{"isPrivacyPolicyRequired":true,"privacyPolicyUrl":"https://cdn.storeedgefd.dsx.mp.microsoft.com/eus2/privacy-policy-storage/TODO_AddYourSellerIdHere/e9eee9fc-b68b-400f-9a47-7447d444aa85/draftsubmission/privacy_policy_69543acd-782e-41e3-a2f9-04fb15bda2af.txt","certificationNotes":"Updated certification notes. ","category":"DeveloperTools","subcategory":"Utilities","genres":[],"productDeclarations":{"dependsOnDriversOrNT":false,"accessibilitySupport":false,"penAndInkSupport":false,"usesGenerativeAI":false},"isSystemFeatureRequired":[{"isRequired":false,"isRecommended":false,"hardwareItemType":"Touch"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Keyboard"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Mouse"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Camera"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"NFC_HCE"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"NFC_Proximity"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Bluetooth_LE"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Telephony"},{"isRequired":false,"isRecommended":false,"hardwareItemType":"Microphone"}],"systemRequirementDetails":[{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"Memory"},{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"DirectX"},{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"Video_Memory"},{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"Processor"},{"minimumRequirement":"","recommendedRequirement":"","hardwareItemType":"Graphics"}]}},"isSuccess":true}
 
 
 Getting Application Metadata - Listings
---- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/metadata/listings ---
+--- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/metadata/listings ---
 {"responseData":{"listings":[{"language":"en","description":"New Description Updated By Node.js Sample Code","whatsNew":"new stuff for v2_0 2026-02-07 22:00","productFeatures":["v2_0 2026-02-07 22:00 rocks","v2_0 2026-02-07 22:00 is funny too"],"shortDescription":"test metadata 4","searchTerms":[],"additionalLicenseTerms":"License terms are required.","requirements":[],"heroArts":[],"trailers":[]},{"language":"es","description":"New Description Updated By Node.js Sample Code","whatsNew":"Nada nuevo en v2_0 2026-02-07 22:00","productFeatures":["Diversion","inteligencia artificial"],"shortDescription":"descripcion corta","searchTerms":[],"additionalLicenseTerms":"Terminos de licencia","requirements":[],"heroArts":[],"trailers":[]}]},"isSuccess":true}
 
 
 Updating Listings Metadata - Description
---- put: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/metadata ---
+--- put: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/metadata ---
 {"listings":{"language":"en","description":"New Description Updated By Node.js Sample Code","whatsNew":"new stuff for v2_0 2026-02-07 22:00","productFeatures":["v2_0 2026-02-07 22:00 rocks","v2_0 2026-02-07 22:00 is funny too"],"shortDescription":"test metadata 4","searchTerms":[],"additionalLicenseTerms":"License terms are required.","requirements":[],"heroArts":[],"trailers":[]}}
 {"responseData":{},"isSuccess":true}
 
 
 Getting All Listings Assets
---- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/listings/assets ---
+--- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/listings/assets ---
 {"responseData":{"listingAssets":[{"language":"es","storeLogos":[{"id":"8ab55363-b34f-4308-96bf-d6cafb1f4343","assetUrl":"https://sparkstorageaccwus2prod.blob.core.windows.net/listingassets/685d01ca-35ae-4ffd-9e3f-9d479db2ba01_8ab55363-b34f-4308-96bf-d6cafb1f4343","imageSize":{"width":1080,"height":1080}}],"screenshots":[{"id":"0e62d901-a785-4efe-aff5-3f87a64e51b4","assetUrl":"https://sparkstorageaccwus2prod.blob.core.windows.net/listingassets/685d01ca-35ae-4ffd-9e3f-9d479db2ba01_0e62d901-a785-4efe-aff5-3f87a64e51b4","imageSize":{"width":1366,"height":768}}]},{"language":"en","storeLogos":[{"id":"683820cf-9894-41a4-b8e8-b4ccfd74461c","assetUrl":"https://sparkstorageaccwus2prod.blob.core.windows.net/listingassets/bc051dd7-9dfb-4f3c-b757-305ef4964cff_683820cf-9894-41a4-b8e8-b4ccfd74461c","imageSize":{"width":1080,"height":1080}}],"screenshots":[{"id":"a912ee15-3f57-4be5-b3f1-bd145f9afddc","assetUrl":"https://sparkstorageaccwus2prod.blob.core.windows.net/listingassets/bc051dd7-9dfb-4f3c-b757-305ef4964cff_a912ee15-3f57-4be5-b3f1-bd145f9afddc","imageSize":{"width":1366,"height":768}}]}]},"isSuccess":true}
 
 
 Creating Listing Assets for 1 Screenshot
---- post: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/listings/assets/create ---
+--- post: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/listings/assets/create ---
 {"language":"es","createAssetRequest":{"Screenshot":1,"Logo":0}}
 {"responseData":{"listingAssets":{"language":"es","screenshots":[{"id":"371a46e6-8452-43f7-a34f-1849d6e2d997","primaryAssetUploadUrl":"https://sparkstorageaccwus2prod.blob.core.windows.net/listingassets/685d01ca-35ae-4ffd-9e3f-9d479db2ba01_371a46e6-8452-43f7-a34f-1849d6e2d997?skoid=419bda37-05ef-4c0d-9dac-e8dfbdfa5669&sktid=cdc5aeea-15c5-4db6-b079-fcadd2505dc2&skt=2026-02-09T07%3A06%3A29Z&ske=2026-02-09T08%3A06%3A29Z&sks=b&skv=2021-08-06&sv=2021-08-06&st=2026-02-09T07%3A06%3A29Z&se=2026-02-09T08%3A06%3A29Z&sr=b&sp=rcw&sig=lYqx7Q%2FwAizsEXwjM3t7jZ78aHAM6Pp4b6rUGEkSJl0%3D","secondaryAssetUploadUrl":"https://sparkstorageaccwus2prod.blob.core.windows.net/listingassets/685d01ca-35ae-4ffd-9e3f-9d479db2ba01_371a46e6-8452-43f7-a34f-1849d6e2d997?skoid=419bda37-05ef-4c0d-9dac-e8dfbdfa5669&sktid=cdc5aeea-15c5-4db6-b079-fcadd2505dc2&skt=2026-02-09T07%3A06%3A29Z&ske=2026-02-09T08%3A06%3A29Z&sks=b&skv=2021-08-06&sv=2021-08-06&st=2026-02-09T07%3A06%3A29Z&se=2026-02-09T08%3A06%3A29Z&sr=b&sp=rcw&sig=lYqx7Q%2FwAizsEXwjM3t7jZ78aHAM6Pp4b6rUGEkSJl0%3D","httpMethod":"PUT","httpHeaders":{"Content-Type":"image/png","Content-Length":"","Host":"","x-ms-blob-type":"BlockBlob"}}]}},"isSuccess":true}
 
@@ -71,23 +71,23 @@ Uploading Listing Assets
 
 
 Committing Listing Assets
---- put: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/listings/assets/commit ---
+--- put: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/listings/assets/commit ---
 {"listingAssets":{"language":"es","storeLogos":[{"id":"8ab55363-b34f-4308-96bf-d6cafb1f4343","assetUrl":"https://sparkstorageaccwus2prod.blob.core.windows.net/listingassets/685d01ca-35ae-4ffd-9e3f-9d479db2ba01_8ab55363-b34f-4308-96bf-d6cafb1f4343","imageSize":{"width":1080,"height":1080}}],"screenshots":[{"id":"371a46e6-8452-43f7-a34f-1849d6e2d997","assetUrl":"https://sparkstorageaccwus2prod.blob.core.windows.net/listingassets/685d01ca-35ae-4ffd-9e3f-9d479db2ba01_371a46e6-8452-43f7-a34f-1849d6e2d997?skoid=419bda37-05ef-4c0d-9dac-e8dfbdfa5669&sktid=cdc5aeea-15c5-4db6-b079-fcadd2505dc2&skt=2026-02-09T07%3A06%3A29Z&ske=2026-02-09T08%3A06%3A29Z&sks=b&skv=2021-08-06&sv=2021-08-06&st=2026-02-09T07%3A06%3A29Z&se=2026-02-09T08%3A06%3A29Z&sr=b&sp=rcw&sig=lYqx7Q%2FwAizsEXwjM3t7jZ78aHAM6Pp4b6rUGEkSJl0%3D"}]}}
 {"responseData":{},"isSuccess":true}
 
 
 Getting Current Application Draft Status before Submission
---- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/status ---
+--- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/status ---
 {"responseData":{"isReady":true},"isSuccess":true}
 
 
 Creating Submission
---- post: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/submit ---
-{"responseData":{"pollingUrl":"submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/submission/1152921505700520060/status","submissionId":"1152921505700520060"},"isSuccess":true}
+--- post: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/submit ---
+{"responseData":{"pollingUrl":"submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/submission/1152921505700520060/status","submissionId":"1152921505700520060"},"isSuccess":true}
 
 
 Current Submission Status
---- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/TODO_AddYourUnpackagedApplicationIdHere/submission/1152921505700520060/status ---
+--- get: https://manage.devcenter.microsoft.com/v1.0/my/submission/v1/product/e9eee9fc-b68b-400f-9a47-7447d444aa85/submission/1152921505700520060/status ---
 {"responseData":{"publishingStatus":"INPROGRESS","hasFailed":false},"isSuccess":true}
 
 
